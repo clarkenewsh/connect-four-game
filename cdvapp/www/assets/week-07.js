@@ -71,7 +71,7 @@
     }
   });
 });
-;define("week-07/components/tic-tac-toe", ["exports"], function (_exports) {
+;define("week-07/components/connect-four", ["exports"], function (_exports) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -89,7 +89,7 @@
           </div>
       {{/if}}
       {{#if draw}}
-          We'll call it a draw.
+          Lets call it a draw.
       {{/if}}
       <button {{action 'start'}}>Restart</button>
   {{else}}
@@ -100,12 +100,18 @@
   
   */
   {
-    "id": "JuswggOL",
-    "block": "{\"symbols\":[],\"statements\":[[2,\"\\n\"],[6,[37,2],[[35,4]],null,[[\"default\",\"else\"],[{\"statements\":[[6,[37,2],[[35,1]],null,[[\"default\"],[{\"statements\":[[2,\"        \"],[10,\"div\"],[12],[2,\"\\n            Player \"],[1,[34,1]],[2,\" won!\\n        \"],[13],[2,\"\\n\"]],\"parameters\":[]}]]],[6,[37,2],[[35,3]],null,[[\"default\"],[{\"statements\":[[2,\"        We'll call it a draw.\\n\"]],\"parameters\":[]}]]],[2,\"    \"],[11,\"button\"],[4,[38,0],[[32,0],\"start\"],null],[12],[2,\"Restart\"],[13],[2,\"\\n\"]],\"parameters\":[]},{\"statements\":[[2,\"    \"],[11,\"button\"],[4,[38,0],[[32,0],\"start\"],null],[12],[2,\"Start\"],[13],[2,\"\\n\"]],\"parameters\":[]}]]],[10,\"canvas\"],[14,1,\"stage\"],[14,\"width\",\"380\"],[14,\"height\",\"380\"],[12],[13],[2,\"\\n\\n\"]],\"hasEval\":false,\"upvars\":[\"action\",\"winner\",\"if\",\"draw\",\"playing\"]}",
+    "id": "5bjas2T3",
+    "block": "{\"symbols\":[],\"statements\":[[2,\"\\n\"],[6,[37,2],[[35,4]],null,[[\"default\",\"else\"],[{\"statements\":[[6,[37,2],[[35,1]],null,[[\"default\"],[{\"statements\":[[2,\"        \"],[10,\"div\"],[12],[2,\"\\n            Player \"],[1,[34,1]],[2,\" won!\\n        \"],[13],[2,\"\\n\"]],\"parameters\":[]}]]],[6,[37,2],[[35,3]],null,[[\"default\"],[{\"statements\":[[2,\"        Lets call it a draw.\\n\"]],\"parameters\":[]}]]],[2,\"    \"],[11,\"button\"],[4,[38,0],[[32,0],\"start\"],null],[12],[2,\"Restart\"],[13],[2,\"\\n\"]],\"parameters\":[]},{\"statements\":[[2,\"    \"],[11,\"button\"],[4,[38,0],[[32,0],\"start\"],null],[12],[2,\"Start\"],[13],[2,\"\\n\"]],\"parameters\":[]}]]],[10,\"canvas\"],[14,1,\"stage\"],[14,\"width\",\"380\"],[14,\"height\",\"380\"],[12],[13],[2,\"\\n\\n\"]],\"hasEval\":false,\"upvars\":[\"action\",\"winner\",\"if\",\"draw\",\"playing\"]}",
     "meta": {
-      "moduleName": "week-07/components/tic-tac-toe.hbs"
+      "moduleName": "week-07/components/connect-four.hbs"
     }
   });
+  /* PROJECT TO-DO LIST:
+    - Fix GitHub repo. Commit and push changes
+    - Create intial tests as per test stratergy
+    - Create counters for each player 
+  */
+
 
   // This function clones the state matrix. We need this functionality, because when the minimax algorithm creates the game tree, it has to hold all possible moves, so we need lots of copies of the state matrix. 
   function deepClone(state) {
@@ -120,7 +126,60 @@
 
   function check_game_winner(state) {
     // winning patterns
-    var patterns = [[[0, 0], [1, 1], [2, 2]], [[0, 2], [1, 1], [2, 0]], [[0, 0], [0, 1], [0, 2]], [[1, 0], [1, 1], [1, 2]], [[2, 0], [2, 1], [2, 2]], [[0, 0], [1, 0], [2, 0]], [[0, 1], [1, 1], [2, 1]], [[0, 2], [1, 2], [2, 2]]]; // match winning patterns to the board
+    // The patterns variable is an array of patterns and each pattern itself is an array of x/y co-ordinates. 
+    // What we are specifying for each pattern is the set of x/y/ co-ordinates that must all be the same for the player to win. 
+
+    /*
+    Get the state's current value at the pattern's first co-ordinates.
+    If that value has a value (is not set to the initial undefined), then continue checking, otherwise move on to the next pattern. The logic here is that if nobody has played in the first square, then the pattern cannot match.
+    Loop over all other co-ordinates in the pattern (starting at idx = 1) and if the winner value is different to the value at any of the other co-ordinates of the pattern, then set the winner to undefined. The logic here is that the value at all other co-ordinates specified in the pattern must be the same as the initial one. If it is not, then either another player has played or nobody has played that co-ordinate yet. In either case, it indicates that the pattern does not match completely.
+    Finally, if after checking all co-ordinates in the pattern, the winner is still set to a value, then set that value as the component's "winner" property and stop checking any other patterns. 
+    */
+    var patterns = [// Vertical winning positions 
+    [[0, 0], [0, 1], [0, 2], [0, 3]], [[0, 1], [0, 2], [0, 3], [0, 4]], [[0, 2], [0, 3], [0, 4], [0, 5]], [[1, 0], [1, 1], [1, 2], [1, 3]], [[1, 1], [1, 2], [1, 3], [1, 4]], [[1, 2], [1, 3], [1, 4], [1, 5]], [[2, 0], [2, 1], [2, 2], [2, 3]], [[2, 1], [2, 2], [2, 3], [2, 4]], [[2, 2], [2, 3], [2, 4], [2, 5]], [[3, 0], [3, 1], [3, 2], [3, 3]], [[3, 1], [3, 2], [3, 3], [3, 4]], [[3, 2], [3, 3], [3, 4], [3, 5]], [[4, 0], [4, 1], [4, 2], [4, 3]], [[4, 1], [4, 2], [4, 3], [4, 4]], [[4, 2], [4, 3], [4, 4], [4, 5]], [[5, 0], [5, 1], [5, 2], [5, 3]], [[5, 1], [5, 2], [5, 3], [5, 4]], [[5, 2], [5, 3], [5, 4], [5, 5]], [[6, 0], [6, 1], [6, 2], [6, 3]], [[6, 1], [6, 2], [6, 3], [6, 4]], [[6, 2], [6, 3], [6, 4], [6, 5]], // Horizontal winning positions
+    [[0, 0], [1, 0], [2, 0], [3, 0]], [[1, 0], [2, 0], [3, 0], [4, 0]], [[2, 0], [3, 0], [4, 0], [5, 0]], [[3, 0], [4, 0], [5, 0], [6, 0]], [[0, 1], [1, 1], [2, 1], [3, 1]], [[1, 1], [2, 1], [3, 1], [4, 1]], [[2, 1], [3, 1], [4, 1], [5, 1]], [[3, 1], [4, 1], [5, 1], [6, 1]], [[0, 2], [1, 2], [2, 2], [3, 2]], [[1, 2], [2, 2], [3, 2], [4, 2]], [[2, 2], [3, 2], [4, 2], [5, 2]], [[3, 2], [4, 2], [5, 2], [6, 2]], [[0, 3], [1, 3], [2, 3], [3, 3]], [[1, 3], [2, 3], [3, 3], [4, 3]], [[2, 3], [3, 3], [4, 3], [5, 3]], [[3, 3], [4, 3], [5, 3], [6, 3]], [[0, 4], [1, 4], [2, 4], [3, 4]], [[1, 4], [2, 4], [3, 4], [4, 4]], [[2, 4], [3, 4], [4, 4], [5, 4]], [[3, 4], [4, 4], [5, 4], [6, 4]], [[0, 5], [1, 5], [2, 5], [3, 5]], [[1, 5], [2, 5], [3, 5], [4, 5]], [[2, 5], [3, 5], [4, 5], [5, 5]], [[3, 5], [4, 5], [5, 5], [6, 5]], // Diagonl winning ppositions
+    [[0, 3], [1, 2], [2, 1], [3, 0]], [[0, 4], [1, 3], [2, 2], [3, 1]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[1, 3], [2, 2], [3, 1], [4, 0]], [[0, 5], [1, 4], [2, 3], [3, 2]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[2, 3], [3, 2], [4, 1], [5, 0]], [[1, 5], [2, 4], [3, 3], [4, 2]], [[2, 4], [3, 3], [4, 2], [5, 1]], [[3, 3], [4, 2], [5, 1], [6, 0]], [[2, 5], [3, 4], [4, 3], [5, 2]], [[3, 4], [4, 3], [5, 2], [6, 1]], [[3, 5], [4, 4], [5, 3], [6, 2]], [[3, 0], [4, 1], [5, 2], [6, 3]], [[2, 0], [3, 1], [4, 2], [5, 3]], [[3, 1], [4, 2], [5, 3], [6, 4]], [[1, 0], [2, 1], [3, 2], [4, 3]], [[2, 1], [3, 2], [4, 3], [5, 4]], [[3, 2], [4, 3], [5, 4], [6, 5]], [[0, 0], [1, 1], [2, 2], [3, 3]], [[1, 1], [2, 2], [3, 3], [4, 4]], [[2, 2], [3, 3], [4, 4], [5, 5]], [[0, 1], [1, 2], [2, 3], [3, 4]], [[1, 2], [2, 3], [3, 4], [4, 5]], [[0, 2], [1, 3], [2, 4], [3, 5]] // orginal patterns
+    // [
+    //   [0, 0],
+    //   [1, 1],
+    //   [2, 2]
+    // ],
+    // [
+    //   [0, 2],
+    //   [1, 1],
+    //   [2, 0]
+    // ],
+    // [
+    //   [0, 0],
+    //   [0, 1],
+    //   [0, 2]
+    // ],
+    // [
+    //   [1, 0],
+    //   [1, 1],
+    //   [1, 2]
+    // ],
+    // [
+    //   [2, 0],
+    //   [2, 1],
+    //   [2, 2]
+    // ],
+    // [
+    //   [0, 0],
+    //   [1, 0],
+    //   [2, 0]
+    // ],
+    // [
+    //   [0, 1],
+    //   [1, 1],
+    //   [2, 1]
+    // ],
+    // [
+    //   [0, 2],
+    //   [1, 2],
+    //   [2, 2]
+    // ]
+    ]; // match winning patterns to the board
 
     for (var pidx = 0; pidx < patterns.length; pidx++) {
       var pattern = patterns[pidx];
@@ -241,68 +300,114 @@
     }
 
     return move;
-  }
+  } // Connect 4 componenet initilaise - GAME RULES: https://en.wikipedia.org/wiki/Connect_Four
+
 
   var _default = Ember._setComponentTemplate(__COLOCATED_TEMPLATE__, Ember.Component.extend({
+    /* Compoent varibvales to handle the state of the game, storing win, draw and playing variables
+        - game state can then be used after to is the game is currently ac tive, then each turn to check winning position or end match resulting in a draw
+    */
     playing: false,
     winner: undefined,
     draw: false,
+    // On initiliasion of the game component register applications game sounds for interaction feedback using sound assets
     init: function () {
       this._super(...arguments);
 
       createjs.Sound.registerSound("assets/sounds/click.wav", "place-marker");
       createjs.Sound.registerSound("assets/sounds/falling.mp3", "falling");
     },
+
+    /* Function to draw the game canavas/baord for connect 4 using a 6x7 grid
+        1. Create a stage using create.js stage
+        2. create.js saved in board varibale to draw shapes 
+        3. graphics varible to implement the board layout/grid
+        4. Create 'o' markers for each player to place their counter within the grid 
+    */
     didInsertElement: function () {
+      // Create a stage using create.js stage
       var stage = new createjs.Stage(this.$('#stage')[0]); // Draw the board game
 
       var board = new createjs.Shape();
       var graphics = board.graphics;
-      graphics.beginFill('#ffffff');
-      graphics.drawRect(0, 99, 300, 2);
-      graphics.drawRect(0, 199, 300, 2);
-      graphics.drawRect(99, 0, 2, 300);
-      graphics.drawRect(199, 0, 2, 300);
-      board.x = 40;
-      board.y = 40;
+      graphics.beginFill('#192DA1');
+      /* Draw a horizonalgrid 
+      co-ordinate system in EaselJS 
+      1st parameter - Upper top load of board 
+      2nd parameter - distance between verticle line: 6 columns / 300 board canavs = 50
+      3rd parameter - sets the endpoint lf the line 
+      4th parameter - sets the width of the grid lines 
+      */
+      // Draw vertical grid 6 columns in total
+
+      graphics.drawRect(0, 0, 294, 4);
+      graphics.drawRect(0, 50, 294, 4);
+      graphics.drawRect(0, 100, 294, 4);
+      graphics.drawRect(0, 150, 294, 4);
+      graphics.drawRect(0, 200, 294, 4);
+      graphics.drawRect(0, 250, 294, 4);
+      graphics.drawRect(0, 300, 298, 4); // Draw vertical grid 7 columns in total
+
+      graphics.drawRect(0, 0, 4, 300);
+      graphics.drawRect(42, 0, 4, 300);
+      graphics.drawRect(84, 0, 4, 300);
+      graphics.drawRect(126, 0, 4, 300);
+      graphics.drawRect(168, 0, 4, 300);
+      graphics.drawRect(210, 0, 4, 300);
+      graphics.drawRect(252, 0, 4, 300);
+      graphics.drawRect(294, 0, 4, 300); // Set padding for the outer grid line upon the x and y axis. top/bottom, left/right
+
+      board.x = 30;
+      board.y = 40; // board aplha ensures the board is transparents on init and made visible once the start button is clicked
+
       board.alpha = 0;
       this.set('board', board);
-      stage.addChild(board); // create player markers
+      stage.addChild(board);
+      /* Create player counters for each player 
+          - create a markers object that holds the "x" and "o" players' markers
+          - loop and create the x counters for player 1. 21 needed for 6x7 grid
+              - beginStroke to set the counter colour
+              - setStrokeStyle to indicate that we want any line to be drawn 12 pixels wide
+          - loop create the o counters for player 2. 21 needed for 6x7 grid
+          - store the list of markers and the stage in the component's state
+          - Update the canvas with both the x and o counters for each player 
+      */
 
       var markers = {
         'x': [],
         'o': []
-      };
+      }; // Create sufficent amoutn of markerks for x counter player. As per game rules 6x7 = 42 - 21 counters per platyer 
 
-      for (var x = 0; x < 5; x++) {
-        // creates the circular marker for the "o" 
+      for (var x = 0; x < 21; x++) {
+        // create the circular red 'o' marker for player 1
         var circleMarker = new createjs.Shape();
         graphics = circleMarker.graphics;
-        graphics.beginStroke('#66ff66');
-        graphics.setStrokeStyle(10);
-        graphics.drawCircle(0, 0, 30);
+        graphics.beginStroke('#DB2621');
+        graphics.setStrokeStyle(12);
+        graphics.drawCircle(0, 0, 8);
         circleMarker.visible = false;
         stage.addChild(circleMarker);
-        markers.o.push(circleMarker); // create the x marker 
+        markers.o.push(circleMarker); // create the circular yellow 'o' marker for player 2
 
         var crossMarker = new createjs.Shape();
         graphics = crossMarker.graphics;
-        graphics.beginStroke('#6666ff');
-        graphics.setStrokeStyle(10);
-        graphics.moveTo(0, 0);
-        graphics.lineTo(40, 40);
-        graphics.moveTo(0, 40);
-        graphics.lineTo(40, 0);
+        graphics.beginStroke('#F2E205');
+        graphics.setStrokeStyle(12);
+        graphics.drawCircle(0, 0, 8);
         crossMarker.visible = false;
         stage.addChild(crossMarker);
         markers.x.push(crossMarker);
-      } // update the drawing
+      } // store the list of markers and the stage in the component's state, so when the user clicks on the board, we can get a marker to place and re-draw the stage
 
 
       this.set('markers', markers);
       this.set('stage', stage);
       createjs.Ticker.addEventListener("tick", stage);
     },
+
+    /* Function to check the game winner or if the game results with a draw
+      - get current game state and check against winning postions array or final draw state
+    */
     check_winner: function () {
       var state = this.get('state');
       var winner = check_game_winner(state);
@@ -315,13 +420,18 @@
         }
       }
     },
-    // set x,y limit of marker placement on the canvas
+
+    /* Function to handle user clicks on the game canavs 
+     - set x,y limit of marker placement on the canvas
+     - Restrict the size limits of the board canvas
+     - Determine which cell of the board the user clicked on
+    */
     click: function (ev) {
       var component = this;
 
       if (component.get('playing') && !component.get('winner')) {
-        if (ev.offsetX >= 40 && ev.offsetY >= 40 && ev.offsetX < 340 && ev.offsetY < 340) {
-          var x = Math.floor((ev.offsetX - 40) / 100);
+        if (ev.offsetX >= 30 && ev.offsetY >= 40 && ev.offsetX < 340 && ev.offsetY < 340) {
+          var x = Math.floor((ev.offsetX - 40) / 42);
           var y = Math.floor((ev.offsetY - 40) / 100);
           var state = component.get('state');
 
@@ -357,6 +467,14 @@
         }
       }
     },
+
+    /* Action functions to control the game state Start and restart the game.
+        - start action function to first initilaise the game state and present the canvas with the applied createjs animation
+        - set the playing state to true and the winner & draw state to undefined
+        - state set to undefined for each grid space to ensure the first player can play any position upon start
+        - set moves initialises the number of moves that each player has made so far in the game
+        - loop over all the markers we created earlier and set their .visible property to false
+    */
     actions: {
       start: function () {
         var board = this.get('board');
@@ -387,17 +505,18 @@
         this.set('playing', true);
         this.set('winner', undefined);
         this.set('draw', undefined);
-        this.set('state', [[undefined, undefined, undefined], [undefined, undefined, undefined], [undefined, undefined, undefined]]);
+        this.set('state', [[undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined], [undefined, undefined, undefined, undefined, undefined, undefined]]);
         this.set('moves', {
           'x': 0,
           'o': 0
         });
         this.set('player', 'x');
-        var markers = this.get('markers'); // hide all markers
-        // for(var idx = 0; idx < 5; idx++) {
-        //     markers.x[idx].visible = false;
-        //     markers.o[idx].visible = false;
-        // }
+        var markers = this.get('markers'); // hide all markers - not sure if this neededs ucommenting yet - check when click function is complete
+
+        for (var idx = 0; idx < 5; idx++) {
+          markers.x[idx].visible = false;
+          markers.o[idx].visible = false;
+        }
 
         this.get('stage').update();
       }
@@ -796,8 +915,8 @@
   _exports.default = void 0;
 
   var _default = Ember.HTMLBars.template({
-    "id": "S1OdM2dQ",
-    "block": "{\"symbols\":[],\"statements\":[[10,\"section\"],[14,1,\"app\"],[12],[2,\"\\n    \"],[10,\"header\"],[12],[2,\"\\n        \"],[10,\"h1\"],[12],[6,[37,0],null,[[\"route\"],[\"game\"]],[[\"default\"],[{\"statements\":[[2,\"Connect 4\"]],\"parameters\":[]}]]],[13],[2,\"\\n    \"],[13],[2,\"\\n    \"],[10,\"article\"],[12],[2,\"\\n        \"],[1,[30,[36,2],[[30,[36,1],null,null]],null]],[2,\"\\n    \"],[13],[2,\"\\n    \"],[10,\"footer\"],[12],[2,\"\\n        \"],[10,\"div\"],[14,0,\"float-left\"],[12],[2,\"\\n            powered by ember. Developed by Clarke Newsham\\n        \"],[13],[2,\"\\n        \"],[10,\"div\"],[14,0,\"float-right\"],[12],[2,\"\\n            \"],[6,[37,0],null,[[\"route\"],[\"highscores\"]],[[\"default\"],[{\"statements\":[[2,\"High scores\"]],\"parameters\":[]}]]],[2,\"\\n        \"],[13],[2,\"\\n\\n    \"],[13],[2,\"\\n\"],[13]],\"hasEval\":false,\"upvars\":[\"link-to\",\"-outlet\",\"component\"]}",
+    "id": "fEoAxKi8",
+    "block": "{\"symbols\":[],\"statements\":[[10,\"section\"],[14,1,\"app\"],[12],[2,\"\\n    \"],[10,\"header\"],[12],[2,\"\\n        \"],[10,\"h1\"],[12],[6,[37,0],null,[[\"route\"],[\"game\"]],[[\"default\"],[{\"statements\":[[2,\"Connect\"],[10,\"span\"],[12],[2,\"4\"],[13]],\"parameters\":[]}]]],[13],[2,\"\\n    \"],[13],[2,\"\\n    \"],[10,\"article\"],[12],[2,\"\\n        \"],[1,[30,[36,2],[[30,[36,1],null,null]],null]],[2,\"\\n    \"],[13],[2,\"\\n    \"],[10,\"footer\"],[12],[2,\"\\n        \"],[10,\"div\"],[14,0,\"center\"],[12],[2,\"\\n            Powered by ember-cordova | Developed by Clarke Newsham\\n        \"],[13],[2,\"\\n    \"],[13],[2,\"\\n\"],[13]],\"hasEval\":false,\"upvars\":[\"link-to\",\"-outlet\",\"component\"]}",
     "meta": {
       "moduleName": "week-07/templates/application.hbs"
     }
@@ -814,8 +933,8 @@
   _exports.default = void 0;
 
   var _default = Ember.HTMLBars.template({
-    "id": "ayc9fbU/",
-    "block": "{\"symbols\":[],\"statements\":[[2,\"\\n\\n\"],[1,[34,0]]],\"hasEval\":false,\"upvars\":[\"tic-tac-toe\"]}",
+    "id": "3CXXTQXt",
+    "block": "{\"symbols\":[],\"statements\":[[2,\"\\n\\n\"],[1,[34,0]]],\"hasEval\":false,\"upvars\":[\"connect-four\"]}",
     "meta": {
       "moduleName": "week-07/templates/game.hbs"
     }
