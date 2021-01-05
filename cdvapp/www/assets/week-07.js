@@ -108,8 +108,10 @@
   });
   /* PROJECT TO-DO LIST:
     - Fix GitHub repo. Commit and push changes
-    - Create intial tests as per test stratergy
-    - Create counters for each player 
+    - Create a couple unit tests tests as per test stratergy
+    - check_game_winner functions positions 
+    - Click positions for each players
+    - Check winner function
   */
 
 
@@ -123,63 +125,23 @@
 
     return new_state;
   }
+  /*
+  Winning patterns
+  The patterns variable is an array of patterns and each pattern itself is an array of x/y co-ordinates. 
+  */
+
 
   function check_game_winner(state) {
-    // winning patterns
-    // The patterns variable is an array of patterns and each pattern itself is an array of x/y co-ordinates. 
-    // What we are specifying for each pattern is the set of x/y/ co-ordinates that must all be the same for the player to win. 
-
     /*
-    Get the state's current value at the pattern's first co-ordinates.
-    If that value has a value (is not set to the initial undefined), then continue checking, otherwise move on to the next pattern. The logic here is that if nobody has played in the first square, then the pattern cannot match.
-    Loop over all other co-ordinates in the pattern (starting at idx = 1) and if the winner value is different to the value at any of the other co-ordinates of the pattern, then set the winner to undefined. The logic here is that the value at all other co-ordinates specified in the pattern must be the same as the initial one. If it is not, then either another player has played or nobody has played that co-ordinate yet. In either case, it indicates that the pattern does not match completely.
-    Finally, if after checking all co-ordinates in the pattern, the winner is still set to a value, then set that value as the component's "winner" property and stop checking any other patterns. 
+      - Get the state's current value at the pattern's first co-ordinates.
+      - If that value has a value (is not set to the initial undefined), then continue checking, otherwise move on to the next pattern. The logic here is that if nobody has played in the first square, then the pattern cannot match.
+      - Loop over all other co-ordinates in the pattern (starting at idx = 1) and if the winner value is different to the value at any of the other co-ordinates of the pattern, then set the winner to undefined. The logic here is that the value at all other co-ordinates specified in the pattern must be the same as the initial one. If it is not, then either another player has played or nobody has played that co-ordinate yet. In either case, it indicates that the pattern does not match completely.
+      - Finally, if after checking all co-ordinates in the pattern, the winner is still set to a value, then set that value as the component's "winner" property and stop checking any other patterns. 
     */
     var patterns = [// Vertical winning positions 
     [[0, 0], [0, 1], [0, 2], [0, 3]], [[0, 1], [0, 2], [0, 3], [0, 4]], [[0, 2], [0, 3], [0, 4], [0, 5]], [[1, 0], [1, 1], [1, 2], [1, 3]], [[1, 1], [1, 2], [1, 3], [1, 4]], [[1, 2], [1, 3], [1, 4], [1, 5]], [[2, 0], [2, 1], [2, 2], [2, 3]], [[2, 1], [2, 2], [2, 3], [2, 4]], [[2, 2], [2, 3], [2, 4], [2, 5]], [[3, 0], [3, 1], [3, 2], [3, 3]], [[3, 1], [3, 2], [3, 3], [3, 4]], [[3, 2], [3, 3], [3, 4], [3, 5]], [[4, 0], [4, 1], [4, 2], [4, 3]], [[4, 1], [4, 2], [4, 3], [4, 4]], [[4, 2], [4, 3], [4, 4], [4, 5]], [[5, 0], [5, 1], [5, 2], [5, 3]], [[5, 1], [5, 2], [5, 3], [5, 4]], [[5, 2], [5, 3], [5, 4], [5, 5]], [[6, 0], [6, 1], [6, 2], [6, 3]], [[6, 1], [6, 2], [6, 3], [6, 4]], [[6, 2], [6, 3], [6, 4], [6, 5]], // Horizontal winning positions
-    [[0, 0], [1, 0], [2, 0], [3, 0]], [[1, 0], [2, 0], [3, 0], [4, 0]], [[2, 0], [3, 0], [4, 0], [5, 0]], [[3, 0], [4, 0], [5, 0], [6, 0]], [[0, 1], [1, 1], [2, 1], [3, 1]], [[1, 1], [2, 1], [3, 1], [4, 1]], [[2, 1], [3, 1], [4, 1], [5, 1]], [[3, 1], [4, 1], [5, 1], [6, 1]], [[0, 2], [1, 2], [2, 2], [3, 2]], [[1, 2], [2, 2], [3, 2], [4, 2]], [[2, 2], [3, 2], [4, 2], [5, 2]], [[3, 2], [4, 2], [5, 2], [6, 2]], [[0, 3], [1, 3], [2, 3], [3, 3]], [[1, 3], [2, 3], [3, 3], [4, 3]], [[2, 3], [3, 3], [4, 3], [5, 3]], [[3, 3], [4, 3], [5, 3], [6, 3]], [[0, 4], [1, 4], [2, 4], [3, 4]], [[1, 4], [2, 4], [3, 4], [4, 4]], [[2, 4], [3, 4], [4, 4], [5, 4]], [[3, 4], [4, 4], [5, 4], [6, 4]], [[0, 5], [1, 5], [2, 5], [3, 5]], [[1, 5], [2, 5], [3, 5], [4, 5]], [[2, 5], [3, 5], [4, 5], [5, 5]], [[3, 5], [4, 5], [5, 5], [6, 5]], // Diagonl winning ppositions
-    [[0, 3], [1, 2], [2, 1], [3, 0]], [[0, 4], [1, 3], [2, 2], [3, 1]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[1, 3], [2, 2], [3, 1], [4, 0]], [[0, 5], [1, 4], [2, 3], [3, 2]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[2, 3], [3, 2], [4, 1], [5, 0]], [[1, 5], [2, 4], [3, 3], [4, 2]], [[2, 4], [3, 3], [4, 2], [5, 1]], [[3, 3], [4, 2], [5, 1], [6, 0]], [[2, 5], [3, 4], [4, 3], [5, 2]], [[3, 4], [4, 3], [5, 2], [6, 1]], [[3, 5], [4, 4], [5, 3], [6, 2]], [[3, 0], [4, 1], [5, 2], [6, 3]], [[2, 0], [3, 1], [4, 2], [5, 3]], [[3, 1], [4, 2], [5, 3], [6, 4]], [[1, 0], [2, 1], [3, 2], [4, 3]], [[2, 1], [3, 2], [4, 3], [5, 4]], [[3, 2], [4, 3], [5, 4], [6, 5]], [[0, 0], [1, 1], [2, 2], [3, 3]], [[1, 1], [2, 2], [3, 3], [4, 4]], [[2, 2], [3, 3], [4, 4], [5, 5]], [[0, 1], [1, 2], [2, 3], [3, 4]], [[1, 2], [2, 3], [3, 4], [4, 5]], [[0, 2], [1, 3], [2, 4], [3, 5]] // orginal patterns
-    // [
-    //   [0, 0],
-    //   [1, 1],
-    //   [2, 2]
-    // ],
-    // [
-    //   [0, 2],
-    //   [1, 1],
-    //   [2, 0]
-    // ],
-    // [
-    //   [0, 0],
-    //   [0, 1],
-    //   [0, 2]
-    // ],
-    // [
-    //   [1, 0],
-    //   [1, 1],
-    //   [1, 2]
-    // ],
-    // [
-    //   [2, 0],
-    //   [2, 1],
-    //   [2, 2]
-    // ],
-    // [
-    //   [0, 0],
-    //   [1, 0],
-    //   [2, 0]
-    // ],
-    // [
-    //   [0, 1],
-    //   [1, 1],
-    //   [2, 1]
-    // ],
-    // [
-    //   [0, 2],
-    //   [1, 2],
-    //   [2, 2]
-    // ]
-    ]; // match winning patterns to the board
+    [[0, 0], [1, 0], [2, 0], [3, 0]], [[1, 0], [2, 0], [3, 0], [4, 0]], [[2, 0], [3, 0], [4, 0], [5, 0]], [[3, 0], [4, 0], [5, 0], [6, 0]], [[0, 1], [1, 1], [2, 1], [3, 1]], [[1, 1], [2, 1], [3, 1], [4, 1]], [[2, 1], [3, 1], [4, 1], [5, 1]], [[3, 1], [4, 1], [5, 1], [6, 1]], [[0, 2], [1, 2], [2, 2], [3, 2]], [[1, 2], [2, 2], [3, 2], [4, 2]], [[2, 2], [3, 2], [4, 2], [5, 2]], [[3, 2], [4, 2], [5, 2], [6, 2]], [[0, 3], [1, 3], [2, 3], [3, 3]], [[1, 3], [2, 3], [3, 3], [4, 3]], [[2, 3], [3, 3], [4, 3], [5, 3]], [[3, 3], [4, 3], [5, 3], [6, 3]], [[0, 4], [1, 4], [2, 4], [3, 4]], [[1, 4], [2, 4], [3, 4], [4, 4]], [[2, 4], [3, 4], [4, 4], [5, 4]], [[3, 4], [4, 4], [5, 4], [6, 4]], [[0, 5], [1, 5], [2, 5], [3, 5]], [[1, 5], [2, 5], [3, 5], [4, 5]], [[2, 5], [3, 5], [4, 5], [5, 5]], [[3, 5], [4, 5], [5, 5], [6, 5]], // Diagonl winning positions
+    [[0, 3], [1, 2], [2, 1], [3, 0]], [[0, 4], [1, 3], [2, 2], [3, 1]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[1, 3], [2, 2], [3, 1], [4, 0]], [[0, 5], [1, 4], [2, 3], [3, 2]], [[1, 4], [2, 3], [3, 2], [4, 1]], [[2, 3], [3, 2], [4, 1], [5, 0]], [[1, 5], [2, 4], [3, 3], [4, 2]], [[2, 4], [3, 3], [4, 2], [5, 1]], [[3, 3], [4, 2], [5, 1], [6, 0]], [[2, 5], [3, 4], [4, 3], [5, 2]], [[3, 4], [4, 3], [5, 2], [6, 1]], [[3, 5], [4, 4], [5, 3], [6, 2]], [[3, 0], [4, 1], [5, 2], [6, 3]], [[2, 0], [3, 1], [4, 2], [5, 3]], [[3, 1], [4, 2], [5, 3], [6, 4]], [[1, 0], [2, 1], [3, 2], [4, 3]], [[2, 1], [3, 2], [4, 3], [5, 4]], [[3, 2], [4, 3], [5, 4], [6, 5]], [[0, 0], [1, 1], [2, 2], [3, 3]], [[1, 1], [2, 2], [3, 3], [4, 4]], [[2, 2], [3, 3], [4, 4], [5, 5]], [[0, 1], [1, 2], [2, 3], [3, 4]], [[1, 2], [2, 3], [3, 4], [4, 5]], [[0, 2], [1, 3], [2, 4], [3, 5]]]; // match winning patterns to the board
 
     for (var pidx = 0; pidx < patterns.length; pidx++) {
       var pattern = patterns[pidx];
@@ -432,7 +394,7 @@
       if (component.get('playing') && !component.get('winner')) {
         if (ev.offsetX >= 30 && ev.offsetY >= 40 && ev.offsetX < 340 && ev.offsetY < 340) {
           var x = Math.floor((ev.offsetX - 40) / 42);
-          var y = Math.floor((ev.offsetY - 40) / 100);
+          var y = 5;
           var state = component.get('state');
 
           if (!state[x][y]) {
@@ -442,8 +404,8 @@
             state[x][y] = 'x'; // show the correct marker at the correct location
 
             marker.visible = true;
-            marker.x = 70 + x * 100;
-            marker.y = 70 + y * 100; // Update the game state with the new player and move counts
+            marker.x = 50 + x * 42;
+            marker.y = 70 + y * 50; // Update the game state with the new player and move counts
 
             component.check_winner();
             component.get('moves')['x'] = move_count + 1; //   add a computer player and move as long as no win or draw is dectected
@@ -513,7 +475,7 @@
         this.set('player', 'x');
         var markers = this.get('markers'); // hide all markers - not sure if this neededs ucommenting yet - check when click function is complete
 
-        for (var idx = 0; idx < 5; idx++) {
+        for (var idx = 0; idx < 21; idx++) {
           markers.x[idx].visible = false;
           markers.o[idx].visible = false;
         }
@@ -1035,7 +997,7 @@ catch(err) {
 
 ;
           if (!runningTests) {
-            require("week-07/app")["default"].create({"name":"week-07","version":"0.0.0+65a2ff30"});
+            require("week-07/app")["default"].create({"name":"week-07","version":"0.0.0+70e3e894"});
           }
         
 //# sourceMappingURL=week-07.map
